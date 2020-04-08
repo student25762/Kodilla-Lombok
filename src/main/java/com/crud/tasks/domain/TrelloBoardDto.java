@@ -20,7 +20,6 @@ public class TrelloBoardDto {
     @JsonProperty("id")
     private String id;
 
-
     @JsonProperty("lists")
     private List<TrelloListDto> lists;
 }

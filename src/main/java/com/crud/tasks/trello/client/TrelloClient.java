@@ -25,9 +25,6 @@ public class TrelloClient {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(TrelloClient.class);
 
-    @Value("hubertkrz")
-    private String trelloAppUser;
-
     @Autowired
     private TrelloConfig trelloConfig;
 
@@ -38,6 +35,8 @@ public class TrelloClient {
 
 
         try{
+            URI url = getUrl();
+            System.out.print(url);
             TrelloBoardDto[] boardsResponse = restTemplate.getForObject(getUrl(), TrelloBoardDto[].class);
             return Arrays.asList(Optional.ofNullable(boardsResponse).orElse(new TrelloBoardDto[0]));
         } catch (RestClientException e){
@@ -62,7 +61,7 @@ public class TrelloClient {
     }
 
     private URI getUrl(){
-        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/members/" + trelloAppUser + "/boards")
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/members/hubertkrz/boards")
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloAppToken())
                 .queryParam("fields", "name,id")
