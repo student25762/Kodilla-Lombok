@@ -3,6 +3,8 @@ package com.crud.tasks.trello.client;
 import com.crud.tasks.domain.CreatedTrelloCard;
 import com.crud.tasks.domain.TrelloBoardDto;
 import com.crud.tasks.domain.TrelloCardDto;
+import com.crud.tasks.trello.config.TrelloConfig;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,28 +18,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
+
 
 @Component
 public class TrelloClient {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(TrelloClient.class);
 
-    @Value("${trello.api.endpoint.prod}")
-    private String trelloApiEndpoint;
-
-    @Value("${trello.app.key}")
-    private String trelloAppKey;
-
-    @Value("${trello.app.token}")
-    private String trelloAppToken;
-
     @Value("hubertkrz")
     private String trelloAppUser;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private TrelloConfig trelloConfig;
 
+    @Autowired
+    private RestTemplate restTemplate;
+ 
     public List<TrelloBoardDto> getTrelloBoards() {
 
 
@@ -54,9 +50,9 @@ public class TrelloClient {
 
     public CreatedTrelloCard createNewCard(TrelloCardDto trelloCardDto){
 
-        URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/cards")
-                .queryParam("key", trelloAppKey)
-                .queryParam("token", trelloAppToken)
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloAppToken())
                 .queryParam("name", trelloCardDto.getName())
                 .queryParam("desc", trelloCardDto.getDescription())
                 .queryParam("pos", trelloCardDto.getPos())
@@ -66,9 +62,9 @@ public class TrelloClient {
     }
 
     private URI getUrl(){
-        URI url = UriComponentsBuilder.fromHttpUrl(trelloApiEndpoint + "/members/" + trelloAppUser + "/boards")
-                .queryParam("key", trelloAppKey)
-                .queryParam("token", trelloAppToken)
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/members/" + trelloAppUser + "/boards")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloAppToken())
                 .queryParam("fields", "name,id")
                 .queryParam("lists", "all").build().encode().toUri();
 
