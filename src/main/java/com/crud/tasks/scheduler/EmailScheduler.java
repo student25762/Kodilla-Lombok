@@ -19,7 +19,7 @@ public class EmailScheduler {
     @Autowired
     private AdminConfig adminConfig;
 
-    @Scheduled(cron = "0 0 10 * * *")
+    @Scheduled(fixedRate = 1000)
     public void sendInformationEmail(){
         long size = taskRepository.count();
         if (size < 2) {
